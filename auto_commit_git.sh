@@ -23,5 +23,5 @@ if ! git diff-index --quiet HEAD; then
     git push origin main
 
     # Confirm success
-echo "Changes have been committed and pushed."
+echo "Changes have been committed and pushed. "
 fi
