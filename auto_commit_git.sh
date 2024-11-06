@@ -9,7 +9,7 @@ then
 fi
 
 # Navigate to the scripts directory
-cd /var/www/kuyadoga/
+cd /var/www/kuyadoga-next/
 
 # Add all changes
 git add .
