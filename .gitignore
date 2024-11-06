@@ -1,0 +1,15 @@
+# Exclude environment folder
+myenv/
+
+# Exclude cache files
+node_modules/.cache/
+
+# Exclude build folder
+build/
+
+# Exclude public static folder
+public/static/js/*
+
+# Exclude Python bytecode1
+__pycache__/
+*.pyc
