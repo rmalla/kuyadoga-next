@@ -25,17 +25,22 @@ async function fetchProducts(manufacturer, page = 1) {
     };
 }
 
-
 export async function generateMetadata({ params }) {
+    // Await params to ensure it's available
+    const { name } = await Promise.resolve(params);
+
     return {
-        title: `${params.name} Products - Kuyadoga`,
-        description: `Discover high-quality products from ${params.name}. Browse our selection of top-notch products available for purchase.`,
+        title: `${name} Products - Kuyadoga`,
+        description: `Discover high-quality products from ${name}. Browse our selection of top-notch products available for purchase.`,
     };
 }
 
-export default async function ManufacturerPage({ params, searchParams }) {
-    const { name } = params;
-    const page = parseInt(searchParams.page) || 1; // Default to page 1 if not specified
+
+export default async function ManufacturerPage(props) {
+    // Await params and searchParams to ensure they are resolved
+    const { name } = await Promise.resolve(props.params);
+    const resolvedSearchParams = await Promise.resolve(props.searchParams);
+    const page = parseInt(resolvedSearchParams.page) || 1; // Default to page 1 if not specified
 
     let data;
     try {
@@ -56,10 +61,14 @@ export default async function ManufacturerPage({ params, searchParams }) {
         <div style={styles.container}>
             <h1>{name} Products</h1>
             <div style={styles.productList}>
-                {products.map(product => (
+                {products.map((product) => (
                     <Link href={`/${product.manufacturer.toLowerCase()}/${product.part_number}`} key={product.id}>
                         <div style={styles.productCard}>
-                            <img src={(product.images && product.images[0]?.image) || '/images/kuyadoga-logo-square.jpg'} alt={product.name} style={styles.productImage} />
+                            <img
+                                src={(product.images && product.images[0]?.image) || '/images/kuyadoga-logo-square.jpg'}
+                                alt={product.name}
+                                style={styles.productImage}
+                            />
                             <h3>{product.name}</h3>
                             <p><strong>Part Number:</strong> {product.part_number}</p>
                             <p><strong>Price:</strong> ${product.price}</p>
@@ -68,20 +77,14 @@ export default async function ManufacturerPage({ params, searchParams }) {
                 ))}
             </div>
 
-
-
-                        {/* Pagination Component */}
-
-            <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                basePath={`/manufacturer/${name}`}
-            />
-
-
+            {/* Pagination Component */}
+            <Pagination currentPage={page} totalPages={totalPages} basePath={`/manufacturer/${name}`} />
         </div>
     );
 }
+
+
+
 
 const styles = {
     container: {

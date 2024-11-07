@@ -3,7 +3,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ProductImage from '../../../components/ProductImage';
-
+import RelatedProducts from '../../../components/RelatedProducts';
 
 
 // Function to fetch product data based on manufacturer and part number
@@ -22,7 +22,9 @@ async function getProduct(manufacturer, partnumber) {
 
 // Dynamic metadata export for SEO
 export async function generateMetadata({ params }) {
-    const { manufacturer, partnumber } = params;
+    // Await params to ensure it's available
+    const { manufacturer, partnumber } = await Promise.resolve(params);
+
     const product = await getProduct(manufacturer, partnumber);
 
     if (!product) {
@@ -53,8 +55,14 @@ export async function generateMetadata({ params }) {
     };
 }
 
+
+
+
+
 // Main ProductPage component
-export default async function ProductPage({ params }) {
+export default async function ProductPage(props) {
+    // Resolve params asynchronously to ensure it's available
+    const params = await Promise.resolve(props.params);
     const { manufacturer, partnumber } = params;
 
     // Fetch product data
@@ -70,11 +78,7 @@ export default async function ProductPage({ params }) {
             <div style={styles.productSection}>
                 {/* Image on the Left */}
                 <div style={styles.imageContainer}>
-
-
                     <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px' }} />
-
-
                 </div>
 
                 {/* Product Details on the Right */}
@@ -114,6 +118,15 @@ export default async function ProductPage({ params }) {
         </div>
     );
 }
+
+
+
+
+
+
+
+
+
 
 // Styles object for inline styling
 const styles = {
