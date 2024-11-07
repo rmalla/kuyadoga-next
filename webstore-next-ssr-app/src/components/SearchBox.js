@@ -1,4 +1,3 @@
-// src/components/SearchBox.js
 import Link from 'next/link';
 
 const SearchBox = () => {
@@ -6,7 +5,13 @@ const SearchBox = () => {
         <form
             action="/search"
             method="get"
-            style={{ display: 'flex', marginBottom: '20px' }}
+            style={{
+                display: 'flex',
+                marginBottom: '20px',
+                maxWidth: '300px', // Limit the width to 200px
+                marginLeft: 'auto',  // Push the form to the right
+                paddingRight: '50px'
+            }}
         >
             <input
                 type="text"

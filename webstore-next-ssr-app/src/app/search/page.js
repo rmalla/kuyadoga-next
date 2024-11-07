@@ -73,6 +73,8 @@ const styles = {
         textAlign: 'center',
         backgroundColor: '#fff',
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+        maxWidth: '300px',
+
     },
     productImage: {
         width: '100%',

@@ -1,4 +1,4 @@
-// app/[manufacturer]/[partnumber]/page.js
+// src/app/[manufacturer]/[partnumber]/page.js
 
 import { notFound } from 'next/navigation';
 
@@ -11,9 +11,43 @@ async function getProduct(manufacturer, partnumber) {
     return data.length > 0 ? data[0] : null; // Assuming API returns an array
 }
 
-export default async function ProductPage({ params: unresolvedParams }) {
-    const params = await unresolvedParams;
-    const { manufacturer, partnumber } = params;
+// Dynamic metadata export for SEO
+export async function generateMetadata({ params }) {
+    const resolvedParams = await params; // Await `params`
+    const { manufacturer, partnumber } = resolvedParams;
+    const product = await getProduct(manufacturer, partnumber);
+
+    if (!product) {
+        return {
+            title: 'Product Not Found - Kuyadoga',
+            description: 'The product you are looking for could not be found.',
+        };
+    }
+
+    return {
+        title: `${product.name} - ${product.part_number} - ${product.manufacturer} | Kuyadoga`,
+        description: product.description || 'Discover high-quality products from trusted manufacturers.',
+        keywords: `${product.manufacturer}, ${product.part_number}, ${product.name}, buy online, secure payment`,
+        openGraph: {
+            title: `${product.name} - ${product.manufacturer} | Kuyadoga`,
+            description: product.description || 'Discover high-quality products from trusted manufacturers.',
+            images: [
+                product.image ? product.image : '/kuyadoga-logo-square.jpg',
+            ],
+            url: `https://yourwebsite.com/${manufacturer}/${partnumber}`,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `${product.name} - ${product.manufacturer} | Kuyadoga`,
+            description: product.description || 'Discover high-quality products from trusted manufacturers.',
+            image: product.image ? product.image : '/kuyadoga-logo-square.jpg',
+        },
+    };
+}
+
+export default async function ProductPage({ params }) {
+    const resolvedParams = await params; // Await `params`
+    const { manufacturer, partnumber } = resolvedParams;
 
     const product = await getProduct(manufacturer, partnumber);
 
