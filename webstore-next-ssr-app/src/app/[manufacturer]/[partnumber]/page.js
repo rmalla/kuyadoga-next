@@ -1,6 +1,7 @@
 // src/app/[manufacturer]/[partnumber]/page.js
 
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
 // Function to fetch product data based on manufacturer and part number
 async function getProduct(manufacturer, partnumber) {
@@ -78,7 +79,7 @@ export default async function ProductPage({ params }) {
                 {/* Product Details on the Right */}
                 <div style={styles.details}>
                     <h1 style={styles.productName}>{product.name}</h1>
-                    <p><strong>Manufacturer:</strong> {product.manufacturer}</p>
+                    <p><strong>Manufacturer:</strong> <Link href={`/manufacturer/${encodeURIComponent(manufacturer)}`}>{product.manufacturer}</Link></p>
                     <p><strong>Part Number:</strong> {product.part_number}</p>
                     <p><strong>Description:</strong> {product.description || 'No description available'}</p>
                     <p><strong>Price:</strong> ${product.price}</p>
