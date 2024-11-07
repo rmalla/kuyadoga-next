@@ -3,7 +3,7 @@
 import { notFound } from 'next/navigation';
 
 async function getProduct(manufacturer, partnumber) {
-    const res = await fetch(`https://admin.kuyadoga.com/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&part_number=${encodeURIComponent(partnumber)}`);
+    const res = await fetch(`http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&part_number=${encodeURIComponent(partnumber)}`);
     if (!res.ok) {
         return null;
     }
@@ -31,19 +31,59 @@ export default async function ProductPage({ params: unresolvedParams }) {
                     ) : product.manufacturer_logo ? (
                         <img src={`https://admin.kuyadoga.com/${product.manufacturer_logo}`} alt={product.manufacturer} style={styles.productImage} />
                     ) : (
-                        <img src="kuyadoga-logo-square.jpg" alt="Kuyadoga Logo" style={styles.productImage} />
+                        <img src="/kuyadoga-logo-square.jpg" alt="Kuyadoga Logo" style={styles.productImage} />
                     )}
                 </div>
 
                 {/* Product Details on the Right */}
                 <div style={styles.details}>
-                    <h1>{product.name}</h1>
+                    <h1 style={styles.productName}>{product.name}</h1>
                     <p><strong>Manufacturer:</strong> {product.manufacturer}</p>
                     <p><strong>Part Number:</strong> {product.part_number}</p>
                     <p><strong>Description:</strong> {product.description || 'No description available'}</p>
                     <p><strong>Price:</strong> ${product.price}</p>
+                    <button style={styles.addToCartButton}>Add to Cart</button>
+
+                    {/* Customer Reassurance Messages */}
+                    <div style={styles.reassuranceContainer}>
+                        <p style={styles.reassuranceText}>✔ Free Shipping on Orders Over $100</p>
+                        <p style={styles.reassuranceText}>✔ 30-Day Money-Back Guarantee</p>
+                        <p style={styles.reassuranceText}>✔ Secure Payment Processing</p>
+                    </div>
                 </div>
             </div>
+
+            {/* Contact Form */}
+            <div style={styles.contactFormSection}>
+                <h2>Contact Us</h2>
+                <form style={styles.contactForm} method="POST" action="/api/contact">
+                    <label htmlFor="name" style={styles.label}>Name</label>
+                    <input type="text" id="name" name="name" required style={styles.input} />
+
+                    <label htmlFor="email" style={styles.label}>Email</label>
+                    <input type="email" id="email" name="email" required style={styles.input} />
+
+                    <label htmlFor="message" style={styles.label}>Message</label>
+                    <textarea id="message" name="message" rows="4" required style={styles.textarea}></textarea>
+
+                    <button type="submit" style={styles.submitButton}>Send Message</button>
+                </form>
+            </div>
+
+            <style>
+                {`
+                    @media (max-width: 768px) {
+                        .productSection {
+                            flex-direction: column;
+                            text-align: center;
+                        }
+                        .imageContainer, .details {
+                            width: 100%;
+                            margin-bottom: 1rem;
+                        }
+                    }
+                `}
+            </style>
         </div>
     );
 }
@@ -60,6 +100,10 @@ const styles = {
         gap: '2rem',
         alignItems: 'flex-start',
         marginBottom: '2rem',
+        backgroundColor: '#f9f9f9',
+        padding: '1.5rem',
+        borderRadius: '8px',
+        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
     },
     imageContainer: {
         flex: '1',
@@ -76,5 +120,66 @@ const styles = {
         textAlign: 'left',
         fontSize: '1rem',
         lineHeight: '1.6',
+    },
+    productName: {
+        fontSize: '1.8rem',
+        fontWeight: 'bold',
+        marginBottom: '1rem',
+    },
+    addToCartButton: {
+        padding: '0.75rem 1.5rem',
+        fontSize: '1.2rem',
+        color: '#fff',
+        backgroundColor: '#0070f3',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        marginTop: '1rem',
+    },
+    reassuranceContainer: {
+        marginTop: '1.5rem',
+        borderTop: '1px solid #ddd',
+        paddingTop: '1rem',
+        color: '#4CAF50',
+    },
+    reassuranceText: {
+        fontSize: '1rem',
+        marginBottom: '0.5rem',
+    },
+    contactFormSection: {
+        marginTop: '3rem',
+        padding: '1.5rem',
+        backgroundColor: '#f9f9f9',
+        borderRadius: '8px',
+    },
+    contactForm: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+    },
+    label: {
+        fontWeight: 'bold',
+        fontSize: '1rem',
+    },
+    input: {
+        padding: '0.5rem',
+        fontSize: '1rem',
+        borderRadius: '4px',
+        border: '1px solid #ddd',
+    },
+    textarea: {
+        padding: '0.5rem',
+        fontSize: '1rem',
+        borderRadius: '4px',
+        border: '1px solid #ddd',
+    },
+    submitButton: {
+        padding: '0.75rem 1.5rem',
+        fontSize: '1rem',
+        backgroundColor: '#333',
+        color: '#fff',
+        borderRadius: '4px',
+        border: 'none',
+        cursor: 'pointer',
     },
 };

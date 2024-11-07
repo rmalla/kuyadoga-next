@@ -2,7 +2,7 @@
 import Link from 'next/link';
 
 async function getProducts(query) {
-    const res = await fetch(`https://admin.kuyadoga.com/api/products/?search=${encodeURIComponent(query)}`);
+    const res = await fetch(`http://kuyadoga.com:8002/api/products/?search=${encodeURIComponent(query)}`);
     if (!res.ok) throw new Error('Failed to fetch products');
     return res.json();
 }
@@ -13,7 +13,7 @@ export default async function SearchResults({ searchParams }) {
 
     return (
         <div>
-            <h2>Search Results for "{query}"</h2>
+            <h2>Search Results for {query}</h2>
             <div style={styles.productGrid}>
                 {products.length > 0 ? (
                     products.map((product) => (
