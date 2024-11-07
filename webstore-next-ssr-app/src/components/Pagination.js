@@ -1,86 +1,67 @@
 import Link from 'next/link';
 
-export default function Pagination({ currentPage, totalPages, onPageChange, baseUrl }) {
-    const visiblePages = 5;
+const Pagination = ({ currentPage, totalPages, basePath }) => {
+    const MAX_DISPLAY_PAGES = 5; // Adjust the number of pages to display
+
+    const startPage = Math.max(1, currentPage - Math.floor(MAX_DISPLAY_PAGES / 2));
+    const endPage = Math.min(totalPages, startPage + MAX_DISPLAY_PAGES - 1);
+
     const pageNumbers = [];
-
-    const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
-    const endPage = Math.min(totalPages, currentPage + Math.floor(visiblePages / 2));
-
     for (let i = startPage; i <= endPage; i++) {
         pageNumbers.push(i);
     }
 
     return (
-        <div style={styles.pagination}>
-            {/* Previous Button */}
+        <div style={styles.paginationContainer}>
             {currentPage > 1 && (
-                <Link href={`${baseUrl}?page=${currentPage - 1}`} style={styles.pageLink}>
-                    Previous
+                <Link href={`${basePath}?page=${currentPage - 1}`} style={styles.paginationButton}>
+                    Back
                 </Link>
             )}
 
-            {/* First Page */}
-            {startPage > 1 && (
-                <Link href={`${baseUrl}?page=1`} style={styles.pageLink}>
-                    1
-                </Link>
-            )}
-
-            {/* Ellipsis if needed */}
-            {startPage > 2 && <span style={styles.ellipsis}>...</span>}
-
-            {/* Page Numbers */}
-            {pageNumbers.map(pageNumber => (
+            {pageNumbers.map(page => (
                 <Link
-                    href={`${baseUrl}?page=${pageNumber}`}
-                    key={pageNumber}
+                    href={`${basePath}?page=${page}`}
+                    key={page}
                     style={{
                         ...styles.pageLink,
-                        fontWeight: pageNumber === currentPage ? 'bold' : 'normal'
+                        fontWeight: currentPage === page ? 'bold' : 'normal',
                     }}
                 >
-                    {pageNumber}
+                    {page}
                 </Link>
             ))}
 
-            {/* Ellipsis if needed */}
-            {endPage < totalPages - 1 && <span style={styles.ellipsis}>...</span>}
-
-            {/* Last Page */}
-            {endPage < totalPages && (
-                <Link href={`${baseUrl}?page=${totalPages}`} style={styles.pageLink}>
-                    {totalPages}
-                </Link>
-            )}
-
-            {/* Next Button */}
             {currentPage < totalPages && (
-                <Link href={`${baseUrl}?page=${currentPage + 1}`} style={styles.pageLink}>
+                <Link href={`${basePath}?page=${currentPage + 1}`} style={styles.paginationButton}>
                     Next
                 </Link>
             )}
         </div>
     );
-}
+};
 
 const styles = {
-    pagination: {
-        marginTop: '2rem',
-        textAlign: 'center',
+    paginationContainer: {
         display: 'flex',
-        gap: '0.5rem',
         justifyContent: 'center',
         alignItems: 'center',
+        gap: '0.5rem',
+        marginTop: '2rem',
     },
-    pageLink: {
+    paginationButton: {
         padding: '0.5rem 1rem',
         cursor: 'pointer',
         textDecoration: 'none',
         color: '#0070f3',
     },
-    ellipsis: {
+    pageLink: {
         padding: '0.5rem',
-        color: '#666',
+        margin: '0 0.25rem',
+        cursor: 'pointer',
+        textDecoration: 'none',
+        color: '#0070f3',
     },
 };
+
+export default Pagination;

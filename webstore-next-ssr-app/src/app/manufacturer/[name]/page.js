@@ -1,5 +1,5 @@
 import Link from 'next/link';
-// import Pagination from '../../components/Pagination'; // Adjust path as needed
+import Pagination from '../../../components/Pagination';
 
 async function fetchProducts(manufacturer, page = 1) {
     const limit = 15;
@@ -59,7 +59,7 @@ export default async function ManufacturerPage({ params, searchParams }) {
                 {products.map(product => (
                     <Link href={`/${product.manufacturer.toLowerCase()}/${product.part_number}`} key={product.id}>
                         <div style={styles.productCard}>
-                            <img src={(product.images && product.images[0]?.image) || '/kuyadoga-logo-square.jpg'} alt={product.name} style={styles.productImage} />
+                            <img src={(product.images && product.images[0]?.image) || '/images/kuyadoga-logo-square.jpg'} alt={product.name} style={styles.productImage} />
                             <h3>{product.name}</h3>
                             <p><strong>Part Number:</strong> {product.part_number}</p>
                             <p><strong>Price:</strong> ${product.price}</p>
@@ -68,21 +68,17 @@ export default async function ManufacturerPage({ params, searchParams }) {
                 ))}
             </div>
 
-            {/* Pagination Controls */}
-            <div style={styles.pagination}>
-                {[...Array(totalPages)].map((_, index) => (
-                    <Link
-                        href={`/manufacturer/${name}?page=${index + 1}`}
-                        key={index}
-                        style={{
-                            ...styles.pageLink,
-                            fontWeight: page === index + 1 ? 'bold' : 'normal'
-                        }}
-                    >
-                        {index + 1}
-                    </Link>
-                ))}
-            </div>
+
+
+                        {/* Pagination Component */}
+
+            <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                basePath={`/manufacturer/${name}`}
+            />
+
+
         </div>
     );
 }
