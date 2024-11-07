@@ -6,7 +6,7 @@ export default function Header() {
         <header style={{ display: 'flex', alignItems: 'center', padding: '1rem', backgroundColor: '#333', color: '#fff' }}>
             {/* Logo on the Left */}
             <div style={{ marginRight: '20px' }}>
-                
+
                 <Link href="/" style={{ color: '#fff' }}>
                     <img src="/images/logo_kuyadoga.png" alt="Logo" style={{ width: '175px', height: 'auto' }} />
                 </Link>

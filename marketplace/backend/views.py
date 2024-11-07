@@ -9,29 +9,30 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.db.models import Q
-
+from .pagination import CustomPagination  # Import your custom pagination class
 
 # class ProductViewSet(viewsets.ModelViewSet):
 #     queryset = Product.objects.all()
 #     serializer_class = ProductSerializer
+
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
-    
-    
+    pagination_class = CustomPagination
+
     def get_queryset(self):
         queryset = Product.objects.filter(is_active=True)
-        
+
         # Apply case-insensitive filtering for manufacturer and part number
         manufacturer = self.request.query_params.get('manufacturer')
         part_number = self.request.query_params.get('part_number')
-        
+
         if manufacturer and part_number:
             queryset = queryset.filter(manufacturer__name__iexact=manufacturer, part_number__iexact=part_number)
         elif manufacturer:
             queryset = queryset.filter(manufacturer__name__iexact=manufacturer)
         elif part_number:
             queryset = queryset.filter(part_number__iexact=part_number)
-        
+
         # Apply search filter if a search term is provided
         search_term = self.request.query_params.get('search')
         if search_term:
@@ -39,17 +40,10 @@ class ProductViewSet(viewsets.ModelViewSet):
                 Q(name__icontains=search_term) |
                 Q(manufacturer__name__icontains=search_term) |
                 Q(part_number__icontains=search_term)
-            )[:12]  # Limit to 12 results for search
-        
-        # Apply limit if no search term is provided
-        elif self.request.query_params.get('limit'):
-            try:
-                limit = int(self.request.query_params.get('limit'))
-                queryset = queryset[:limit]
-            except ValueError:
-                pass  # Ignore invalid limit values
-        
-        return queryset
+            )
+
+        # Ensure the queryset is ordered
+        return queryset.order_by('id')  # Order by 'id' or another stable field like 'created_at'
 
 
 class ThirdPartyVendorViewSet(viewsets.ModelViewSet):

@@ -4,7 +4,9 @@ import { fetchProducts } from '../lib/fetcher';
 import ProductCard from '../components/ProductCard';
 
 export default async function HomePage() {
-    const products = await fetchProducts();
+    const productsData = await fetchProducts();
+    // console.log(products); // Check if this logs an array
+    const products = productsData.results; // Access the array within the object
     const limitedProducts = products.slice(0, 12); // Limit to 12 products
 
     return (

@@ -2,19 +2,23 @@
 
 import { notFound } from 'next/navigation';
 
+// Function to fetch product data based on manufacturer and part number
 async function getProduct(manufacturer, partnumber) {
-    const res = await fetch(`http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&part_number=${encodeURIComponent(partnumber)}`);
+    const url = `http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&part_number=${encodeURIComponent(partnumber)}`;
+    const res = await fetch(url);
+
     if (!res.ok) {
+        console.error(`Error fetching product: ${res.statusText}`);
         return null;
     }
+
     const data = await res.json();
-    return data.length > 0 ? data[0] : null; // Assuming API returns an array
+    return data.results && data.results.length > 0 ? data.results[0] : null;
 }
 
 // Dynamic metadata export for SEO
 export async function generateMetadata({ params }) {
-    const resolvedParams = await params; // Await `params`
-    const { manufacturer, partnumber } = resolvedParams;
+    const { manufacturer, partnumber } = params;
     const product = await getProduct(manufacturer, partnumber);
 
     if (!product) {
@@ -45,12 +49,14 @@ export async function generateMetadata({ params }) {
     };
 }
 
+// Main ProductPage component
 export default async function ProductPage({ params }) {
-    const resolvedParams = await params; // Await `params`
-    const { manufacturer, partnumber } = resolvedParams;
+    const { manufacturer, partnumber } = params;
 
+    // Fetch product data
     const product = await getProduct(manufacturer, partnumber);
 
+    // If the product is not found, display a 404 page
     if (!product) {
         notFound();
     }
@@ -63,7 +69,7 @@ export default async function ProductPage({ params }) {
                     {product.image ? (
                         <img src={product.image} alt={product.name} style={styles.productImage} />
                     ) : product.manufacturer_logo ? (
-                        <img src={`https://admin.kuyadoga.com/${product.manufacturer_logo}`} alt={product.manufacturer} style={styles.productImage} />
+                        <img src={`https://admin.kuyadoga.com${product.manufacturer_logo}`} alt={product.manufacturer} style={styles.productImage} />
                     ) : (
                         <img src="/kuyadoga-logo-square.jpg" alt="Kuyadoga Logo" style={styles.productImage} />
                     )}
@@ -103,25 +109,11 @@ export default async function ProductPage({ params }) {
                     <button type="submit" style={styles.submitButton}>Send Message</button>
                 </form>
             </div>
-
-            <style>
-                {`
-                    @media (max-width: 768px) {
-                        .productSection {
-                            flex-direction: column;
-                            text-align: center;
-                        }
-                        .imageContainer, .details {
-                            width: 100%;
-                            margin-bottom: 1rem;
-                        }
-                    }
-                `}
-            </style>
         </div>
     );
 }
 
+// Styles object for inline styling
 const styles = {
     container: {
         padding: '1rem',
