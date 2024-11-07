@@ -1,7 +1,7 @@
 // app/page.js
 
 import { fetchProducts } from '../lib/fetcher';
-import Link from 'next/link';
+import ProductCard from '../components/ProductCard';
 
 export default async function HomePage() {
     const products = await fetchProducts();
@@ -12,22 +12,7 @@ export default async function HomePage() {
             <h1>Our Products</h1>
             <div className="product-grid">
                 {limitedProducts.map((product) => (
-                    <Link key={product.id} href={`/products/${product.id}`}>
-                        <div className="product-tile">
-                            <div className="image-container">
-                                <img
-                                    src={product.image_url || '/images/logo_venexchange.png'}
-                                    alt={product.name}
-                                    className="product-image"
-                                />
-                            </div>
-                            <h2>{product.name}</h2>
-                            <p>{product.manufacturer}</p>
-                            <p>{product.part_number}</p>
-                            <p>{product.description}</p>
-                            <p>Price: ${product.price}</p>
-                        </div>
-                    </Link>
+                    <ProductCard key={product.id} product={product} />
                 ))}
             </div>
         </div>
