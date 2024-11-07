@@ -2,6 +2,9 @@
 
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import ProductImage from '../../../components/ProductImage';
+
+
 
 // Function to fetch product data based on manufacturer and part number
 async function getProduct(manufacturer, partnumber) {
@@ -67,13 +70,11 @@ export default async function ProductPage({ params }) {
             <div style={styles.productSection}>
                 {/* Image on the Left */}
                 <div style={styles.imageContainer}>
-                    {product.image ? (
-                        <img src={product.image} alt={product.name} style={styles.productImage} />
-                    ) : product.manufacturer_logo ? (
-                        <img src={`https://admin.kuyadoga.com${product.manufacturer_logo}`} alt={product.manufacturer} style={styles.productImage} />
-                    ) : (
-                        <img src="/kuyadoga-logo-square.jpg" alt="Kuyadoga Logo" style={styles.productImage} />
-                    )}
+
+
+                    <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px' }} />
+
+
                 </div>
 
                 {/* Product Details on the Right */}

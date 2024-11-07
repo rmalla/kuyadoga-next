@@ -1,5 +1,6 @@
-// app/search/page.js
 import Link from 'next/link';
+import ProductImage from '../../components/ProductImage';
+
 
 async function getProducts(query) {
     const res = await fetch(`http://kuyadoga.com:8002/api/products/?search=${encodeURIComponent(query)}`);
@@ -9,11 +10,12 @@ async function getProducts(query) {
 
 export default async function SearchResults({ searchParams }) {
     const query = searchParams.query || '';
-    const products = query ? await getProducts(query) : [];
+    const productsData = query ? await getProducts(query) : null;
+    const products = productsData ? productsData.results : [];
 
     return (
         <div>
-            <h2>Search Results for {query}</h2>
+            <h2>Search Results for "{query}"</h2>
             <div style={styles.productGrid}>
                 {products.length > 0 ? (
                     products.map((product) => (
@@ -23,25 +25,25 @@ export default async function SearchResults({ searchParams }) {
                             style={styles.link}
                         >
                             <div style={styles.productCard}>
-                                {product.image ? (
-                                    <img
-                                        src={product.image}
-                                        alt={product.name}
-                                        style={styles.productImage}
-                                    />
-                                ) : product.manufacturer_logo ? (
-                                    <img
-                                        src={`https://admin.kuyadoga.com/${product.manufacturer_logo}`}
-                                        alt={product.manufacturer}
-                                        style={styles.productImage}
-                                    />
-                                ) : (
-                                    <img
-                                        src="kuyadoga-logo-square.jpg"
-                                        alt="Kuyadoga Logo"
-                                        style={styles.productImage}
-                                    />
-                                )}
+
+
+
+
+                                <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px' }} />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 <h3>{product.name}</h3>
                                 <p><strong>Manufacturer:</strong> {product.manufacturer}</p>
                                 <p><strong>Part Number:</strong> {product.part_number}</p>
@@ -74,14 +76,13 @@ const styles = {
         backgroundColor: '#fff',
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
         maxWidth: '300px',
-
     },
     productImage: {
         width: '100%',
         height: 'auto',
         borderRadius: '8px',
         marginBottom: '10px',
-        border: '1px solid #ccc'
+        border: '1px solid #ccc',
     },
     link: {
         textDecoration: 'none',
