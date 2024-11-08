@@ -3,7 +3,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ProductImage from '../../../components/ProductImage';
-import RelatedProducts from '../../../components/RelatedProducts';
+import ContactForm from '../../../components/ContactForm';
 
 
 // Function to fetch product data based on manufacturer and part number
@@ -99,22 +99,8 @@ export default async function ProductPage(props) {
                 </div>
             </div>
 
-            {/* Contact Form */}
-            <div style={styles.contactFormSection}>
-                <h2>Contact Us</h2>
-                <form style={styles.contactForm} method="POST" action="/api/contact">
-                    <label htmlFor="name" style={styles.label}>Name</label>
-                    <input type="text" id="name" name="name" required style={styles.input} />
+            <ContactForm />
 
-                    <label htmlFor="email" style={styles.label}>Email</label>
-                    <input type="email" id="email" name="email" required style={styles.input} />
-
-                    <label htmlFor="message" style={styles.label}>Message</label>
-                    <textarea id="message" name="message" rows="4" required style={styles.textarea}></textarea>
-
-                    <button type="submit" style={styles.submitButton}>Send Message</button>
-                </form>
-            </div>
         </div>
     );
 }

@@ -15,7 +15,7 @@ export default async function SearchResults({ searchParams }) {
 
     return (
         <div>
-            <h2>Search Results for "{query}"</h2>
+            <h2>Search Results for {query}</h2>
             <div style={styles.productGrid}>
                 {products.length > 0 ? (
                     products.map((product) => (

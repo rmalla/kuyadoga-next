@@ -3,7 +3,7 @@ import ProductCard from '../components/ProductCard';
 
 export default async function HomePage() {
     const productsData = await fetchProducts();
-    const products = productsData.results;
+    const products = productsData?.results || []; // Default to an empty array if results is undefined
     const limitedProducts = products.slice(0, 12); // Limit to 12 products
 
     return (
@@ -18,6 +18,7 @@ export default async function HomePage() {
     );
 }
 
+// Define the styles object here
 const styles = {
     container: {
         maxWidth: '80%',
