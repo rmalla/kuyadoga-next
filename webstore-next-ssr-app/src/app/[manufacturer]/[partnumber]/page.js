@@ -3,34 +3,11 @@ import Link from 'next/link';
 import ProductImage from '../../../components/ProductImage';
 import ContactForm from '../../../components/ContactForm';
 import ProductGrid from '../../../components/ProductGrid';
+import { fetchProducts, getProduct, getRelatedProducts } from '../../../lib/fetcher';
+
 
 // Fetch product data based on manufacturer and part number
-async function getProduct(manufacturer, partnumber) {
-    const url = `http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&part_number=${encodeURIComponent(partnumber)}`;
-    const res = await fetch(url);
 
-    if (!res.ok) {
-        console.error(`Error fetching product: ${res.statusText}`);
-        return null;
-    }
-
-    const data = await res.json();
-    return data.results && data.results.length > 0 ? data.results[0] : null;
-}
-
-// Fetch related products
-async function getRelatedProducts(manufacturer) {
-    const url = `http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&limit=16`;
-    const res = await fetch(url);
-
-    if (!res.ok) {
-        console.error(`Error fetching related products: ${res.statusText}`);
-        return [];
-    }
-
-    const data = await res.json();
-    return data.results || [];
-}
 
 // Dynamic metadata export for SEO
 export async function generateMetadata({ params }) {
