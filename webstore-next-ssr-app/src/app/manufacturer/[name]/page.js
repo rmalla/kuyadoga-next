@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Pagination from '../../../components/Pagination';
+import ProductImage from '../../../components/ProductImage';
 
 async function fetchProducts(manufacturer, page = 1) {
     const limit = 15;
@@ -64,11 +65,10 @@ export default async function ManufacturerPage(props) {
                 {products.map((product) => (
                     <Link href={`/${product.manufacturer.toLowerCase()}/${product.part_number}`} key={product.id}>
                         <div style={styles.productCard}>
-                            <img
-                                src={(product.images && product.images[0]?.image) || '/images/kuyadoga-logo-square.jpg'}
-                                alt={product.name}
-                                style={styles.productImage}
-                            />
+
+                            <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px' }} />
+
+
                             <h3>{product.name}</h3>
                             <p><strong>Part Number:</strong> {product.part_number}</p>
                             <p><strong>Price:</strong> ${product.price}</p>

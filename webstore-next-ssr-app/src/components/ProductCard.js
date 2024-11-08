@@ -14,8 +14,6 @@ export default function ProductCard({ product }) {
                     <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px' }} />
 
 
-
-
                     <h2>{product.name}</h2>
                     <p>{product.manufacturer}</p>
                     <p>{product.part_number}</p>

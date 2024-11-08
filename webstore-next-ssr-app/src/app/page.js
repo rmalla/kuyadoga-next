@@ -1,6 +1,8 @@
 import { fetchProducts } from '../lib/fetcher';
 import ProductCard from '../components/ProductCard';
 
+
+
 export default async function HomePage() {
     const productsData = await fetchProducts();
     const products = productsData?.results || []; // Default to an empty array if results is undefined

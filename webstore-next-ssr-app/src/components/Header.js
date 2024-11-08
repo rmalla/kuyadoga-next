@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SearchBox from './SearchBox'; // Ensure the path to SearchBox is correct
+import Image from 'next/image';
 
 export default function Header() {
     return (
@@ -8,7 +9,13 @@ export default function Header() {
                 {/* Logo on the Left */}
                 <div style={styles.logoContainer}>
                     <Link href="/" style={{ color: '#fff' }}>
-                        <img src="/images/logo_kuyadoga.png" alt="Logo" style={styles.logo} />
+                        <Image
+                            src="/images/logo_kuyadoga.png"
+                            alt="Logo"
+                            width={175}
+                            height={50} // Adjust height based on your design
+                            style={styles.logo}
+                        />
                     </Link>
                 </div>
 

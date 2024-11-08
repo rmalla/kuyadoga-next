@@ -4,10 +4,10 @@ import { NextResponse } from 'next/server';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 
 // Add console logs here to check environment variable values
-console.log("AWS Access Key:", process.env.AWS_ACCESS_KEY_ID);
-console.log("AWS Secret Key:", process.env.AWS_SECRET_ACCESS_KEY);
-console.log("Sender Email:", process.env.EMAIL_SENDER);
-console.log("Receiver Email:", process.env.EMAIL_RECEIVER);
+// console.log("AWS Access Key:", process.env.AWS_ACCESS_KEY_ID);
+// console.log("AWS Secret Key:", process.env.AWS_SECRET_ACCESS_KEY);
+// console.log("Sender Email:", process.env.EMAIL_SENDER);
+// console.log("Receiver Email:", process.env.EMAIL_RECEIVER);
 
 const sesClient = new SESClient({
     region: 'us-east-1', // e.g., 'us-east-1'
