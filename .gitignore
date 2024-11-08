@@ -2,7 +2,9 @@
 myenv/
 
 # Exclude cache files
-node_modules/.cache/
+node_modules/
+
+/.next
 
 # Exclude build folder
 build/
