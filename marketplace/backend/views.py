@@ -42,9 +42,23 @@ class ProductViewSet(viewsets.ModelViewSet):
                 Q(part_number__icontains=search_term)
             )
 
-        # Ensure the queryset is ordered
-        return queryset.order_by('id')  # Order by 'id' or another stable field like 'created_at'
+        # Determine the order based on the 'order' query parameter
+        order_by = self.request.query_params.get('order', 'id')  # Default order by 'id'
 
+        if order_by == 'random':
+            queryset = queryset.order_by('?')  # Randomize order
+        elif order_by == 'created':
+            queryset = queryset.order_by('created_at')  # Order by creation date (ascending)
+        elif order_by == '-created':
+            queryset = queryset.order_by('-created_at')  # Order by creation date (descending)
+        elif order_by == 'modified':
+            queryset = queryset.order_by('modified_at')  # Order by modified date (ascending)
+        elif order_by == '-modified':
+            queryset = queryset.order_by('-modified_at')  # Order by modified date (descending)
+        else:
+            queryset = queryset.order_by(order_by)  # Default order (or by other valid fields like 'id')
+
+        return queryset
 
 class ThirdPartyVendorViewSet(viewsets.ModelViewSet):
     queryset = ThirdPartyVendor.objects.all()

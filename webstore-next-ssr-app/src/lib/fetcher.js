@@ -11,16 +11,16 @@
 
 
 
-
 // lib/api.js or lib/fetcher.js
-export async function fetchProducts({ manufacturer, partNumber, limit } = {}) {
+export async function fetchProducts({ manufacturer, partNumber, limit, order } = {}) {
     // Construct the base URL
     let url = `http://kuyadoga.com:8002/api/products/?`;
 
     // Append query parameters based on the inputs
     if (manufacturer) url += `manufacturer=${encodeURIComponent(manufacturer)}&`;
     if (partNumber) url += `part_number=${encodeURIComponent(partNumber)}&`;
-    if (limit) url += `limit=${limit}`;
+    if (limit) url += `limit=${limit}&`;
+    if (order) url += `order=${encodeURIComponent(order)}`;
 
     try {
         const res = await fetch(url);
@@ -78,4 +78,30 @@ export async function getRelatedProducts(manufacturer) {
 
     const data = await res.json();
     return data.results || [];
+}
+
+
+
+export async function fetchProductsManufacturer(manufacturer, page = 1) {
+    const limit = 15;
+
+    // Fetch data from the API using `page` and `limit` as query parameters
+    const res = await fetch(`http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&page=${page}&limit=${limit}`, {
+        cache: 'no-store' // Ensures fresh data for each request
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch products');
+    }
+
+    const data = await res.json();
+
+    // Log the API response to verify structure (useful for debugging)
+    // console.log("API response:", data);
+
+    // Return products array and calculate total pages based on `count` and `limit`
+    return {
+        products: Array.isArray(data.results) ? data.results : [],  // Ensure products is an array
+        totalPages: Math.ceil(data.count / limit)  // Calculate total pages based on count
+    };
 }

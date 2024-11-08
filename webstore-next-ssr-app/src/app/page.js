@@ -3,7 +3,7 @@ import { fetchProducts } from '../lib/fetcher';
 
 export default async function HomePage() {
 
-    const products = await fetchProducts({ limit: 18 });
+    const products = await fetchProducts({ limit: 16, order: 'random' });
 
     return (
         <ProductGrid

@@ -1,40 +1,8 @@
 import Link from 'next/link';
 import Pagination from '../../../components/Pagination';
 import ProductImage from '../../../components/ProductImage';
+import { fetchProductsManufacturer } from '../../../lib/fetcher';
 
-async function fetchProducts(manufacturer, page = 1) {
-    const limit = 15;
-
-    // Fetch data from the API using `page` and `limit` as query parameters
-    const res = await fetch(`http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&page=${page}&limit=${limit}`, {
-        cache: 'no-store' // Ensures fresh data for each request
-    });
-
-    if (!res.ok) {
-        throw new Error('Failed to fetch products');
-    }
-
-    const data = await res.json();
-
-    // Log the API response to verify structure (useful for debugging)
-    // console.log("API response:", data);
-
-    // Return products array and calculate total pages based on `count` and `limit`
-    return {
-        products: Array.isArray(data.results) ? data.results : [],  // Ensure products is an array
-        totalPages: Math.ceil(data.count / limit)  // Calculate total pages based on count
-    };
-}
-
-export async function generateMetadata({ params }) {
-    // Await params to ensure it's available
-    const { name } = await Promise.resolve(params);
-
-    return {
-        title: `${name} Products - Kuyadoga`,
-        description: `Discover high-quality products from ${name}. Browse our selection of top-notch products available for purchase.`,
-    };
-}
 
 
 export default async function ManufacturerPage(props) {
@@ -45,7 +13,7 @@ export default async function ManufacturerPage(props) {
 
     let data;
     try {
-        data = await fetchProducts(name, page);
+        data = await fetchProductsManufacturer(name, page);
     } catch (error) {
         console.error("Error fetching products:", error);
         return <div style={styles.error}>Failed to load products. Please try again later.</div>;
