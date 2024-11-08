@@ -1,24 +1,16 @@
 import { fetchProducts } from '../lib/fetcher';
 import ProductCard from '../components/ProductCard';
+import ProductGrid from '../components/ProductGrid';
 
 
 
 export default async function HomePage() {
-    const productsData = await fetchProducts();
-    const products = productsData?.results || []; // Default to an empty array if results is undefined
-    const limitedProducts = products.slice(0, 12); // Limit to 12 products
 
-    return (
-        <div style={styles.container}>
-            <h1 style={styles.heading}>Our Products</h1>
-            <div style={styles.productGrid}>
-                {limitedProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
-            </div>
-        </div>
-    );
+    return <ProductGrid limit={12} title="Our Products" />;
+
 }
+
+
 
 // Define the styles object here
 const styles = {

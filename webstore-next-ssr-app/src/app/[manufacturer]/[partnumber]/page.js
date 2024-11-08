@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ProductImage from '../../../components/ProductImage';
 import ContactForm from '../../../components/ContactForm';
-
+import ProductGrid from '../../../components/ProductGrid';
 
 // Function to fetch product data based on manufacturer and part number
 async function getProduct(manufacturer, partnumber) {
@@ -78,7 +78,7 @@ export default async function ProductPage(props) {
             <div style={styles.productSection}>
                 {/* Image on the Left */}
                 <div style={styles.imageContainer}>
-                    <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px' }} />
+                    <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px', height: '500px', alignItems: 'flex-start' }} />
                 </div>
 
                 {/* Product Details on the Right */}
@@ -101,6 +101,8 @@ export default async function ProductPage(props) {
 
             <ContactForm />
 
+            <ProductGrid limit={16} title="Similar Products" />
+
         </div>
     );
 }
@@ -118,7 +120,7 @@ export default async function ProductPage(props) {
 const styles = {
     container: {
         padding: '1rem',
-        maxWidth: '900px',
+        maxWidth: '1200px',
         margin: '0 auto',
     },
     productSection: {
