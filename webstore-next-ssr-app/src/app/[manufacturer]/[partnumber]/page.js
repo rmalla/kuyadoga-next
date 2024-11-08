@@ -1,12 +1,10 @@
-// src/app/[manufacturer]/[partnumber]/page.js
-
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ProductImage from '../../../components/ProductImage';
 import ContactForm from '../../../components/ContactForm';
 import ProductGrid from '../../../components/ProductGrid';
 
-// Function to fetch product data based on manufacturer and part number
+// Fetch product data based on manufacturer and part number
 async function getProduct(manufacturer, partnumber) {
     const url = `http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&part_number=${encodeURIComponent(partnumber)}`;
     const res = await fetch(url);
@@ -20,10 +18,23 @@ async function getProduct(manufacturer, partnumber) {
     return data.results && data.results.length > 0 ? data.results[0] : null;
 }
 
+// Fetch related products
+async function getRelatedProducts(manufacturer) {
+    const url = `http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&limit=16`;
+    const res = await fetch(url);
+
+    if (!res.ok) {
+        console.error(`Error fetching related products: ${res.statusText}`);
+        return [];
+    }
+
+    const data = await res.json();
+    return data.results || [];
+}
+
 // Dynamic metadata export for SEO
 export async function generateMetadata({ params }) {
-    // Await params to ensure it's available
-    const { manufacturer, partnumber } = await Promise.resolve(params);
+    const { manufacturer, partnumber } = params;
 
     const product = await getProduct(manufacturer, partnumber);
 
@@ -55,23 +66,20 @@ export async function generateMetadata({ params }) {
     };
 }
 
-
-
-
-
 // Main ProductPage component
-export default async function ProductPage(props) {
-    // Resolve params asynchronously to ensure it's available
-    const params = await Promise.resolve(props.params);
+export default async function ProductPage({ params }) {
     const { manufacturer, partnumber } = params;
 
-    // Fetch product data
+    // Fetch the main product data
     const product = await getProduct(manufacturer, partnumber);
 
     // If the product is not found, display a 404 page
     if (!product) {
         notFound();
     }
+
+    // Fetch related products
+    const relatedProducts = await getRelatedProducts(manufacturer);
 
     return (
         <div style={styles.container}>
@@ -101,20 +109,11 @@ export default async function ProductPage(props) {
 
             <ContactForm />
 
-            <ProductGrid limit={16} title="Similar Products" />
-
+            {/* Pass the fetched relatedProducts array to ProductGrid */}
+            <ProductGrid products={relatedProducts} title="Similar Products" />
         </div>
     );
 }
-
-
-
-
-
-
-
-
-
 
 // Styles object for inline styling
 const styles = {
@@ -174,41 +173,5 @@ const styles = {
     reassuranceText: {
         fontSize: '1rem',
         marginBottom: '0.5rem',
-    },
-    contactFormSection: {
-        marginTop: '3rem',
-        padding: '1.5rem',
-        backgroundColor: '#f9f9f9',
-        borderRadius: '8px',
-    },
-    contactForm: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-    },
-    label: {
-        fontWeight: 'bold',
-        fontSize: '1rem',
-    },
-    input: {
-        padding: '0.5rem',
-        fontSize: '1rem',
-        borderRadius: '4px',
-        border: '1px solid #ddd',
-    },
-    textarea: {
-        padding: '0.5rem',
-        fontSize: '1rem',
-        borderRadius: '4px',
-        border: '1px solid #ddd',
-    },
-    submitButton: {
-        padding: '0.75rem 1.5rem',
-        fontSize: '1rem',
-        backgroundColor: '#333',
-        color: '#fff',
-        borderRadius: '4px',
-        border: 'none',
-        cursor: 'pointer',
     },
 };
