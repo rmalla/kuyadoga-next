@@ -1,7 +1,5 @@
-// components/ProductGrid.js
 import React from 'react';
 import ProductCard from './ProductCard';
-import { fetchProducts } from '../lib/fetcher';
 
 const styles = {
     container: {
@@ -20,16 +18,12 @@ const styles = {
     },
 };
 
-export default async function ProductGrid({ limit = 12, title = "Our Products" }) {
-    const productsData = await fetchProducts();
-    const products = productsData?.results || [];
-    const limitedProducts = products.slice(0, limit);
-
+export default function ProductGrid({ products, title = "Our Products", style }) {
     return (
-        <div style={styles.container}>
+        <div style={{ ...styles.container, ...style }}>
             <h1 style={styles.heading}>{title}</h1>
             <div style={styles.productGrid}>
-                {limitedProducts.map((product) => (
+                {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                 ))}
             </div>
