@@ -1,13 +1,16 @@
+// src/app/cart/page.js
+
 import { getSessionCart } from '../../lib/cart';
 
 export const dynamic = 'force-dynamic'; // Ensures SSR
 
 export default async function CartPage() {
-    // Retrieve the cart data directly from cookies on the server side
     const cart = await getSessionCart();
 
-    // Ensure cart is an array before calling reduce
-    const totalPrice = Array.isArray(cart) ? cart.reduce((total, item) => total + Number(item.price) * item.quantity, 0) : 0;
+    // Calculate total price
+    const totalPrice = Array.isArray(cart)
+        ? cart.reduce((total, item) => total + Number(item.price) * item.quantity, 0)
+        : 0;
 
     if (!Array.isArray(cart) || cart.length === 0) {
         return <div>Your cart is empty.</div>;
@@ -16,7 +19,6 @@ export default async function CartPage() {
     return (
         <div style={styles.container}>
             <h1>Your Cart</h1>
-
             {/* Form for updating quantities */}
             <form method="POST" action="/api/cart/update" style={styles.form}>
                 <table style={styles.table}>
@@ -78,6 +80,13 @@ export default async function CartPage() {
                 </table>
                 <button type="submit" style={styles.updateButton}>Update Cart</button>
             </form>
+
+            {/* Form for proceeding to checkout */}
+            <form action="/checkout" method="GET" style={styles.buttonContainer}>
+                <button type="submit" style={styles.checkoutButton}>
+                    Proceed to Checkout
+                </button>
+            </form>
         </div>
     );
 }
@@ -126,6 +135,20 @@ const styles = {
         cursor: 'pointer',
     },
     deleteForm: {
-        display: 'inline', // Ensures delete forms don’t take extra space
+        display: 'inline', // Keeps delete forms from taking extra space
+    },
+    buttonContainer: {
+        marginTop: '1.5rem',
+        display: 'flex',
+        justifyContent: 'flex-end',
+    },
+    checkoutButton: {
+        padding: '0.75rem 1.5rem',
+        backgroundColor: '#0070f3',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontSize: '1rem',
     },
 };
