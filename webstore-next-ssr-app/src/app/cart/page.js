@@ -16,6 +16,8 @@ export default async function CartPage() {
     return (
         <div style={styles.container}>
             <h1>Your Cart</h1>
+
+            {/* Form for updating quantities */}
             <form method="POST" action="/api/cart/update" style={styles.form}>
                 <table style={styles.table}>
                     <thead>
@@ -53,14 +55,16 @@ export default async function CartPage() {
                                 </td>
                                 <td>${(Number(item.price) * item.quantity).toFixed(2)}</td>
                                 <td>
-                                    <button
-                                        type="submit"
-                                        name="deleteItem"
-                                        value={item.id}
-                                        style={styles.deleteButton}
-                                    >
-                                        Delete
-                                    </button>
+                                    {/* Separate form for deleting each item */}
+                                    <form method="POST" action="/api/cart/remove" style={styles.deleteForm}>
+                                        <input type="hidden" name="deleteItem" value={item.id} />
+                                        <button
+                                            type="submit"
+                                            style={styles.deleteButton}
+                                        >
+                                            Delete
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         ))}
@@ -120,5 +124,8 @@ const styles = {
         color: '#fff',
         border: 'none',
         cursor: 'pointer',
+    },
+    deleteForm: {
+        display: 'inline', // Ensures delete forms don’t take extra space
     },
 };
