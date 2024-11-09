@@ -8,7 +8,8 @@ import { getSessionCart } from '../lib/cart'; // Import async getSessionCart
 export default async function Header() {
     // Retrieve cart data directly from cookies for SSR
     const cart = await getSessionCart(); // Await the async function
-    const itemCount = cart.reduce((count, item) => count + item.quantity, 0);
+    const itemCount = Array.isArray(cart) ? cart.reduce((count, item) => count + item.quantity, 0) : 0;
+    // const itemCount = cart.reduce((count, item) => count + item.quantity, 0);
 
     return (
         <header style={styles.header}>
