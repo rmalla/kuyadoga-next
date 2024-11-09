@@ -1,10 +1,15 @@
 // src/app/api/cart/remove/route.js
 
 import { NextResponse } from 'next/server';
+import { getSessionCart, saveSessionCart } from '../../../../lib/cart';
 
 export async function POST(request) {
     const { productId } = await request.json();
-    // Logic to remove the product from the cart
+    let cart = getSessionCart(request.cookies);
+    cart = cart.filter(item => item.id !== productId);
 
-    return NextResponse.json({ success: true });
+    const response = NextResponse.json({ cart });
+    saveSessionCart(response, cart);
+
+    return response;
 }

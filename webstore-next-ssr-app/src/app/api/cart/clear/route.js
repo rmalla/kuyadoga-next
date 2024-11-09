@@ -1,9 +1,10 @@
 // src/app/api/cart/clear/route.js
 
 import { NextResponse } from 'next/server';
+import { saveSessionCart } from '../../../../lib/cart';
 
 export async function POST() {
-    // Logic to clear the cart
-
-    return NextResponse.json({ success: true });
+    const response = NextResponse.json({ cart: [] });
+    saveSessionCart(response, []); // Clear the cart in cookies
+    return response;
 }

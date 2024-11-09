@@ -1,20 +1,20 @@
+// src/app/[manufacturer]/[partnumber]/page.js
+
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ProductImage from '../../../components/ProductImage';
 import ContactForm from '../../../components/ContactForm';
 import ProductGrid from '../../../components/ProductGrid';
+import AddToCartButton from '../../../components/AddToCartButton'; // Import the client component
 import { fetchProducts, getProduct } from '../../../lib/fetcher';
 import { generateProductMetadata } from '../../../lib/metadata';
 
-
-
-// Export generateMetadata for this page
 export async function generateMetadata({ params }) {
     return await generateProductMetadata({ params });
 }
 
 export default async function ProductPage({ params }) {
-    const { manufacturer, partnumber } = await params; // Directly access `params`
+    const { manufacturer, partnumber } = await params; // Await params
 
     // Fetch the product data on the server side
     const product = await getProduct(manufacturer, partnumber);
@@ -27,7 +27,6 @@ export default async function ProductPage({ params }) {
     // Fetch related products in random order
     const relatedProducts = await fetchProducts({ limit: 16, order: 'random' });
 
-    // Render the page with product details and related products
     return (
         <div style={styles.container}>
             <div style={styles.productSection}>
@@ -40,7 +39,10 @@ export default async function ProductPage({ params }) {
                     <p><strong>Part Number:</strong> {product.part_number}</p>
                     <p><strong>Description:</strong> {product.description || 'No description available'}</p>
                     <p><strong>Price:</strong> ${product.price}</p>
-                    <button style={styles.addToCartButton}>Add to Cart</button>
+
+                    {/* Use the client-side AddToCartButton here */}
+                    <AddToCartButton product={product} />
+
                     <div style={styles.reassuranceContainer}>
                         <p style={styles.reassuranceText}>✔ Free Shipping on Orders Over $100</p>
                         <p style={styles.reassuranceText}>✔ 30-Day Money-Back Guarantee</p>
@@ -55,7 +57,6 @@ export default async function ProductPage({ params }) {
     );
 }
 
-// Styles object for inline styling
 const styles = {
     container: {
         padding: '1rem',
@@ -93,16 +94,6 @@ const styles = {
         fontSize: '1.8rem',
         fontWeight: 'bold',
         marginBottom: '1rem',
-    },
-    addToCartButton: {
-        padding: '0.75rem 1.5rem',
-        fontSize: '1.2rem',
-        color: '#fff',
-        backgroundColor: '#0070f3',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        marginTop: '1rem',
     },
     reassuranceContainer: {
         marginTop: '1.5rem',
