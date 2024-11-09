@@ -7,20 +7,23 @@ import ProductImage from './ProductImage';
 export default function ProductCard({ product }) {
     return (
         <div className="product-card" style={{ border: '1px solid #ddd', padding: '1rem', margin: '0.5rem' }}>
-            <Link href={`/${product.manufacturer.toLowerCase()}/${product.part_number}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+
                 <div>
 
+                     <Link href={`/${product.manufacturer.toLowerCase()}/${product.part_number}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px' }} />
+                    </Link>
 
-                    <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px' }} />
-
-
-                    <h2>{product.name}</h2>
-                    <p>{product.manufacturer}</p>
-                    <p>{product.part_number}</p>
-                    <p>{product.description}</p>
-                    <p>Price: ${product.price}</p>
+                    <h4>
+                        <Link href={`/${product.manufacturer.toLowerCase()}/${product.part_number}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            {product.name}
+                        </Link>
+                    </h4>
+                    <p><Link href={`/manufacturer/${encodeURIComponent(product.manufacturer)}`}>{product.manufacturer}</Link></p>
+                    <p>PN: {product.part_number}</p>
+                    <p>${product.price}</p>
                 </div>
-            </Link>
+
         </div>
     );
 }

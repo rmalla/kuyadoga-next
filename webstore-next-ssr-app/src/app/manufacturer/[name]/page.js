@@ -3,6 +3,8 @@ import Pagination from '../../../components/Pagination';
 import ProductImage from '../../../components/ProductImage';
 import { fetchProductsManufacturer } from '../../../lib/fetcher';
 import { capitalizeFirstLetter } from '../../../lib/utils';
+import ProductGrid from '../../../components/ProductGrid';
+
 
 import { generateManufacturerMetadata } from '../../../lib/metadata';
 
@@ -43,23 +45,7 @@ export default async function ManufacturerPage(props) {
 
     return (
         <div style={styles.container}>
-            <h1>{capitalizedName} Products</h1>
-            <div style={styles.productList}>
-                {products.map((product) => (
-                    <Link href={`/${product.manufacturer.toLowerCase()}/${product.part_number}`} key={product.id}>
-                        <div style={styles.productCard}>
-
-                            <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px' }} />
-
-
-                            <h3>{product.name}</h3>
-                            <p><strong>Part Number:</strong> {product.part_number}</p>
-                            <p><strong>Price:</strong> ${product.price}</p>
-                        </div>
-                    </Link>
-                ))}
-            </div>
-
+            <ProductGrid products={products} title={`${capitalizedName} Products`} style={{ maxWidth: '100%', margin: '0 auto' }} />
             {/* Pagination Component */}
             <Pagination currentPage={page} totalPages={totalPages} basePath={`/manufacturer/${name}`} />
         </div>
