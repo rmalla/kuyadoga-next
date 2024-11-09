@@ -1,37 +1,41 @@
-import Link from 'next/link';
-import SearchBox from './SearchBox'; // Ensure the path to SearchBox is correct
-import Image from 'next/image';
+// src/components/Header.js
 
-export default function Header() {
+import Link from 'next/link';
+import SearchBox from './SearchBox';
+import Image from 'next/image';
+import { getSessionCart } from '../lib/cart'; // Import async getSessionCart
+
+export default async function Header() {
+    // Retrieve cart data directly from cookies for SSR
+    const cart = await getSessionCart(); // Await the async function
+    const itemCount = cart.reduce((count, item) => count + item.quantity, 0);
+
     return (
         <header style={styles.header}>
             <div style={styles.container}>
-                {/* Logo on the Left */}
                 <div style={styles.logoContainer}>
                     <Link href="/" style={{ color: '#fff' }}>
                         <Image
                             src="/images/logo_kuyadoga.png"
                             alt="Logo"
                             width={175}
-                            height={50} // Adjust height based on your design
+                            height={50}
                             style={styles.logo}
                         />
                     </Link>
                 </div>
 
-                {/* Centered Content: Store Name, Search Box, and Navigation */}
                 <div style={styles.centerContent}>
                     <h1 style={styles.storeName}>Kuyadoga</h1>
                     <SearchBox />
                 </div>
 
-                {/* Navigation Links */}
                 <nav style={styles.nav}>
                     <Link href="/" style={styles.navLink}>
                         Home
                     </Link>
                     <Link href="/cart" style={styles.navLink}>
-                        Cart
+                        Cart ({itemCount})
                     </Link>
                     <Link href="/checkout" style={styles.navLink}>
                         Checkout
@@ -53,7 +57,7 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'space-between',
         maxWidth: '80%',
-        margin: '0 auto', // Centering the container
+        margin: '0 auto',
     },
     logoContainer: {
         marginRight: '20px',

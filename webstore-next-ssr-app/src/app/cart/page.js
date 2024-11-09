@@ -1,13 +1,12 @@
 // src/app/cart/page.js
 
-import { cookies } from 'next/headers';
 import { getSessionCart } from '../../lib/cart';
 
 export const dynamic = 'force-dynamic'; // Ensures SSR
 
 export default async function CartPage() {
-    // Retrieve the cart data directly from cookies on the server
-    const cart = getSessionCart(cookies());
+    // Retrieve the cart data directly from cookies on the server side
+    const cart = await getSessionCart(); // Await the async function
 
     if (cart.length === 0) {
         return <div>Your cart is empty.</div>;

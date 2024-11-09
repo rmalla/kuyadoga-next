@@ -7,7 +7,9 @@ export async function POST(request) {
     const { product } = await request.json();
 
     // Retrieve the current cart from cookies
-    const cart = getSessionCart(request.cookies);
+    const cart = await getSessionCart(); // Await getSessionCart
+
+    // Ensure `cart` is an array and find the item in the cart
     const existingItem = cart.find(item => item.id === product.id);
 
     if (existingItem) {
@@ -16,8 +18,9 @@ export async function POST(request) {
         cart.push({ ...product, quantity: 1 });
     }
 
+    // Save the updated cart back to cookies
     const response = NextResponse.json({ cart });
-    saveSessionCart(response, cart); // Save updated cart back to cookies
+    saveSessionCart(response, cart);
 
     return response;
 }
