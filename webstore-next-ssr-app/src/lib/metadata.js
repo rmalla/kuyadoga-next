@@ -1,8 +1,6 @@
-
-
-// lib/metadata.js
-
 import { getProduct } from './fetcher';
+import { capitalizeFirstLetter } from './utils';
+
 
 export async function generateProductMetadata({ params }) {
     // Ensure `params` is resolved before destructuring
@@ -29,7 +27,7 @@ export async function generateProductMetadata({ params }) {
             title: `${product.name} - ${product.manufacturer} | Kuyadoga`,
             description: product.description || 'Discover high-quality products from trusted manufacturers.',
             images: [product.image ? product.image : '/kuyadoga-logo-square.jpg'],
-            url: `https://yourwebsite.com/${manufacturer}/${partnumber}`,
+            url: `https://www.kuyadoga.com/${manufacturer}/${partnumber}`,
         },
         twitter: {
             card: 'summary_large_image',
@@ -48,7 +46,7 @@ export function generateGeneralMetadata({ title, description, keywords, url, ima
     const defaultDescription = 'Discover a wide range of high-quality products from trusted manufacturers.';
     const defaultKeywords = 'high-quality products, trusted manufacturers, Kuyadoga, buy online';
     const defaultImage = '/kuyadoga-logo-square.jpg';
-    const defaultUrl = 'https://yourwebsite.com';
+    const defaultUrl = 'https://www.kuyadoga.com';
 
     return {
         title: title || defaultTitle,
@@ -65,6 +63,40 @@ export function generateGeneralMetadata({ title, description, keywords, url, ima
             title: title || defaultTitle,
             description: description || defaultDescription,
             image: image || defaultImage,
+        },
+    };
+}
+
+
+
+
+export function generateManufacturerMetadata(manufacturer) {
+    // Capitalize the manufacturer name before using it in metadata
+    const capitalizedManufacturer = capitalizeFirstLetter(manufacturer);
+
+    // Default values for metadata if specific data isn't available
+    const defaultTitle = 'Kuyadoga - Trusted Manufacturers';
+    const defaultDescription = `Explore products from top-quality manufacturers on Kuyadoga, your trusted source for high-quality products.`;
+    const defaultKeywords = `${capitalizedManufacturer}, Kuyadoga, high-quality products, trusted manufacturers, buy online`;
+    const defaultImage = '/kuyadoga-logo-square.jpg';
+    const defaultUrl = `https://www.kuyadoga.com/manufacturer/${encodeURIComponent(capitalizedManufacturer)}`;
+
+    // Generate metadata specifically for the manufacturer
+    return {
+        title: `${capitalizedManufacturer} - Products and Solutions | Kuyadoga`,
+        description: `Discover the best products and solutions from ${capitalizedManufacturer} on Kuyadoga. Quality products from a trusted brand.`,
+        keywords: `${capitalizedManufacturer}, products, solutions, high-quality, Kuyadoga, buy online`,
+        openGraph: {
+            title: `${capitalizedManufacturer} - Products and Solutions | Kuyadoga`,
+            description: `Browse the finest selection of products from ${capitalizedManufacturer} on Kuyadoga.`,
+            images: [defaultImage],
+            url: defaultUrl,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `${capitalizedManufacturer} - Products and Solutions | Kuyadoga`,
+            description: `Explore high-quality products from ${capitalizedManufacturer} on Kuyadoga.`,
+            image: defaultImage,
         },
     };
 }

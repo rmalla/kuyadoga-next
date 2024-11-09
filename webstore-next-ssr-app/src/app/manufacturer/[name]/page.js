@@ -2,12 +2,27 @@ import Link from 'next/link';
 import Pagination from '../../../components/Pagination';
 import ProductImage from '../../../components/ProductImage';
 import { fetchProductsManufacturer } from '../../../lib/fetcher';
+import { capitalizeFirstLetter } from '../../../lib/utils';
+
+import { generateManufacturerMetadata } from '../../../lib/metadata';
+
+
+
+
+
+// Export generateMetadata for this page
+export async function generateMetadata({ params }) {
+    const { name } = await params; // Extract manufacturer name directly from params
+    return generateManufacturerMetadata(name); // Pass only the name to the metadata function
+}
 
 
 
 export default async function ManufacturerPage(props) {
     // Await params and searchParams to ensure they are resolved
     const { name } = await Promise.resolve(props.params);
+
+    const capitalizedName = capitalizeFirstLetter(name);
     const resolvedSearchParams = await Promise.resolve(props.searchParams);
     const page = parseInt(resolvedSearchParams.page) || 1; // Default to page 1 if not specified
 
@@ -23,12 +38,12 @@ export default async function ManufacturerPage(props) {
     const totalPages = data.totalPages || 1;
 
     if (products.length === 0) {
-        return <div style={styles.noProducts}>No products found for {name}.</div>;
+        return <div style={styles.noProducts}>No products found for {capitalizedName}.</div>;
     }
 
     return (
         <div style={styles.container}>
-            <h1>{name} Products</h1>
+            <h1>{capitalizedName} Products</h1>
             <div style={styles.productList}>
                 {products.map((product) => (
                     <Link href={`/${product.manufacturer.toLowerCase()}/${product.part_number}`} key={product.id}>

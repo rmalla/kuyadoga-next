@@ -3,31 +3,37 @@ import Link from 'next/link';
 import ProductImage from '../../../components/ProductImage';
 import ContactForm from '../../../components/ContactForm';
 import ProductGrid from '../../../components/ProductGrid';
-import { fetchProducts, getProduct, getRelatedProducts } from '../../../lib/fetcher';
+import { fetchProducts, getProduct } from '../../../lib/fetcher';
+import { generateProductMetadata } from '../../../lib/metadata';
+
+
+
+// Export generateMetadata for this page
+export async function generateMetadata({ params }) {
+    return await generateProductMetadata({ params });
+}
 
 export default async function ProductPage({ params }) {
-    const { manufacturer, partnumber } = params; // Directly access `params` without async handling
+    const { manufacturer, partnumber } = await params; // Directly access `params`
 
-    // Fetch the main product data
+    // Fetch the product data on the server side
     const product = await getProduct(manufacturer, partnumber);
 
-    // If the product is not found, display a 404 page
+    // If the product is not found, trigger a 404 page
     if (!product) {
         notFound();
     }
 
-    // Fetch related products
-    const products_random = await fetchProducts({ limit: 16, order: 'random' });
+    // Fetch related products in random order
+    const relatedProducts = await fetchProducts({ limit: 16, order: 'random' });
 
+    // Render the page with product details and related products
     return (
         <div style={styles.container}>
             <div style={styles.productSection}>
-                {/* Image on the Left */}
                 <div style={styles.imageContainer}>
                     <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px', height: '500px', alignItems: 'flex-start' }} />
                 </div>
-
-                {/* Product Details on the Right */}
                 <div style={styles.details}>
                     <h1 style={styles.productName}>{product.name}</h1>
                     <p><strong>Manufacturer:</strong> <Link href={`/manufacturer/${encodeURIComponent(manufacturer)}`}>{product.manufacturer}</Link></p>
@@ -35,8 +41,6 @@ export default async function ProductPage({ params }) {
                     <p><strong>Description:</strong> {product.description || 'No description available'}</p>
                     <p><strong>Price:</strong> ${product.price}</p>
                     <button style={styles.addToCartButton}>Add to Cart</button>
-
-                    {/* Customer Reassurance Messages */}
                     <div style={styles.reassuranceContainer}>
                         <p style={styles.reassuranceText}>✔ Free Shipping on Orders Over $100</p>
                         <p style={styles.reassuranceText}>✔ 30-Day Money-Back Guarantee</p>
@@ -46,8 +50,7 @@ export default async function ProductPage({ params }) {
             </div>
 
             <ContactForm />
-
-            <ProductGrid products={products_random} title="Similar Products" />
+            <ProductGrid products={relatedProducts} title="Similar Products" />
         </div>
     );
 }
