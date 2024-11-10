@@ -13,7 +13,7 @@ export default async function Header() {
         <header style={styles.header}>
             <div style={styles.container}>
                 <div style={styles.logoContainer}>
-                    <Link href="/" style={{ color: '#fff' }}>
+                    <Link href="/" style={{color: '#fff'}}>
                         <Image
                             src="/images/logo_kuyadoga.png"
                             alt="Logo"
@@ -24,10 +24,6 @@ export default async function Header() {
                     </Link>
                 </div>
 
-                <div style={styles.centerContent}>
-                    <h1 style={styles.storeName}>Kuyadoga</h1>
-                    <SearchBox />
-                </div>
 
                 <nav style={styles.nav}>
                     <Link href="/" style={styles.navLink}>
@@ -36,10 +32,14 @@ export default async function Header() {
                     <Link href="/cart" style={styles.navLink}>
                         Cart ({itemCount})
                     </Link>
-                    <Link href="/checkout" style={styles.navLink}>
-                        Checkout
-                    </Link>
                 </nav>
+
+
+                <div style={styles.centerContent}>
+                    <SearchBox/>
+                </div>
+
+
             </div>
         </header>
     );
