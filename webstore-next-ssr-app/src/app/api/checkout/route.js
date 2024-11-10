@@ -138,7 +138,7 @@ export async function POST(request) {
 
         const redirectUrl = new URL('/order-summary', baseUrl);
         // const redirectUrl = new URL('/order-summary', process.env.NEXT_PUBLIC_BASE_URL || 'http://kuyadoga.com:3000');
-                
+
         const response = NextResponse.redirect(redirectUrl);
 
         // Clear the cart cookie

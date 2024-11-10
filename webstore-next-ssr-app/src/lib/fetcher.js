@@ -1,20 +1,13 @@
 // lib/fetcher.js
 //
-// export async function fetchProducts() {
-//     // const response = await fetch('https://your_django_domain.com/api/products/');
-//     const response = await fetch('http://kuyadoga.com:8002/api/products/?limit=12');
-//     if (!response.ok) {
-//         throw new Error('Failed to fetch products');
-//     }
-//     return response.json();
-// }
-
 
 
 // lib/api.js or lib/fetcher.js
 export async function fetchProducts({ manufacturer, partNumber, limit, order } = {}) {
     // Construct the base URL
-    let url = `http://kuyadoga.com:8002/api/products/?`;
+    console.log("DJANGO_INTERNAL_API_URL:", process.env.DJANGO_INTERNAL_API_URL);
+
+    let url = `${process.env.DJANGO_INTERNAL_API_URL}/api/products/?`;
 
     // Append query parameters based on the inputs
     if (manufacturer) url += `manufacturer=${encodeURIComponent(manufacturer)}&`;
@@ -41,7 +34,9 @@ export async function fetchProducts({ manufacturer, partNumber, limit, order } =
 
 
 export async function fetchProductById(id) {
-    const response = await fetch(`http://kuyadoga.com:8002/api/products/${id}/`);
+
+    // const response = await fetch(`http://kuyadoga.com:8002/api/products/${id}/`);
+    const response = await fetch(`${process.env.DJANGO_INTERNAL_API_URL}/api/products/${id}/`);
     if (!response.ok) {
         throw new Error('Failed to fetch product');
     }
@@ -51,7 +46,12 @@ export async function fetchProductById(id) {
 
 
 export async function getProduct(manufacturer, partnumber) {
-    const url = `http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&part_number=${encodeURIComponent(partnumber)}`;
+
+
+
+    // const url = `http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&part_number=${encodeURIComponent(partnumber)}`;
+    const url = `${process.env.DJANGO_INTERNAL_API_URL}/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&part_number=${encodeURIComponent(partnumber)}`;
+
     const res = await fetch(url);
 
     if (!res.ok) {
@@ -68,7 +68,9 @@ export async function getProduct(manufacturer, partnumber) {
 
 // Fetch related products
 export async function getRelatedProducts(manufacturer) {
-    const url = `http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&limit=16`;
+
+    // const url = `http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&limit=16`;
+    const url = `${process.env.DJANGO_INTERNAL_API_URL}/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&limit=16`;
     const res = await fetch(url);
 
     if (!res.ok) {
@@ -86,7 +88,8 @@ export async function fetchProductsManufacturer(manufacturer, page = 1) {
     const limit = 15;
 
     // Fetch data from the API using `page` and `limit` as query parameters
-    const res = await fetch(`http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&page=${page}&limit=${limit}`, {
+    // const res = await fetch(`http://kuyadoga.com:8002/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&page=${page}&limit=${limit}`, {
+    const res = await fetch(`${process.env.DJANGO_INTERNAL_API_URL}/api/products/?manufacturer=${encodeURIComponent(manufacturer)}&page=${page}&limit=${limit}`, {
         cache: 'no-store' // Ensures fresh data for each request
     });
 

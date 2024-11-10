@@ -14,7 +14,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ProductPage({ params }) {
-    const { manufacturer, partnumber } = await params; // Await params
+    const { manufacturer, partnumber } = await params;
 
     // Fetch the product data on the server side
     const product = await getProduct(manufacturer, partnumber);
@@ -30,9 +30,12 @@ export default async function ProductPage({ params }) {
     return (
         <div style={styles.container}>
             <div style={styles.productSection}>
+
                 <div style={styles.imageContainer}>
-                    <ProductImage product={product} style={{ borderRadius: '8px', marginBottom: '10px', height: '500px', alignItems: 'flex-start' }} />
+                    {/* Ensuring ProductImage component receives the correct props */}
+                    <ProductImage product={product} style={styles.productImage} />
                 </div>
+
                 <div style={styles.details}>
                     <h1 style={styles.productName}>{product.name}</h1>
                     <p><strong>Manufacturer:</strong> <Link href={`/manufacturer/${encodeURIComponent(manufacturer)}`}>{product.manufacturer}</Link></p>
@@ -65,30 +68,38 @@ const styles = {
     },
     productSection: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'row', // Stacks image on top by default
         gap: '2rem',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         marginBottom: '2rem',
         backgroundColor: '#f9f9f9',
         padding: '1.5rem',
         borderRadius: '8px',
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+        overflow: 'hidden',
     },
     imageContainer: {
-        flex: '1',
-        maxWidth: '400px',
-    },
-    productImage: {
         width: '100%',
-        height: 'auto',
+        maxWidth: '500px',
+        height: '100%', // Set a specific height to control aspect ratio
+        display: 'flex',
+        justifyContent: 'right',
+        overflow: 'hidden',
         borderRadius: '8px',
         border: '1px solid #ddd',
+        position: 'relative', // Required for "fill" layout to work
+    },
+    productImage: {
+        display: 'block',
+        height: '500px',
     },
     details: {
-        flex: '2',
+        width: '100%',
         textAlign: 'left',
         fontSize: '1rem',
         lineHeight: '1.6',
+        position: 'relative', // Required for "fill" layout to work
+
     },
     productName: {
         fontSize: '1.8rem',
@@ -104,5 +115,29 @@ const styles = {
     reassuranceText: {
         fontSize: '1rem',
         marginBottom: '0.5rem',
+    },
+    '@media (min-width: 768px)': {
+        productSection: {
+            flexDirection: 'row', // Align image on the left on larger screens
+            alignItems: 'flex-start',
+        },
+        imageContainer: {
+            flex: '1', // Allow image container to take up space on the left
+            marginRight: '2rem', // Add space between image and details
+        },
+        details: {
+            flex: '2', // Allow details to take up remaining space
+        },
+    },
+    '@media (max-width: 480px)': {
+        container: {
+            padding: '0.5rem',
+        },
+        productName: {
+            fontSize: '1.4rem',
+        },
+        reassuranceText: {
+            fontSize: '0.9rem',
+        },
     },
 };

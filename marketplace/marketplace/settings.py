@@ -31,7 +31,7 @@ DEBUG = True
 
 # ALLOWED_HOSTS = ['kuyadoga.com']
 # ALLOWED_HOSTS = ['kuyadoga.com', 'www.kuyadoga.com']
-ALLOWED_HOSTS = ['admin.kuyadoga.com', 'kuyadoga.com', 'www.kuyadoga.com','next.kuyadoga.com']
+ALLOWED_HOSTS = ['admin.kuyadoga.com', 'kuyadoga.com', 'www.kuyadoga.com','next.kuyadoga.com','localhost','127.0.0.1','api.kuyadoga.com']
 
 
 
