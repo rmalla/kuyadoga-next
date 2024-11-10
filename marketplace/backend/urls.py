@@ -5,6 +5,8 @@ from rest_framework.routers import DefaultRouter
 from .views import ProductViewSet, ThirdPartyVendorViewSet, ProductManufacturerViewSet, RegisterView, LoginView, UserRegistrationView
 from .views_api import register  # Ensure this is the correct import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.urls import path
+from .views import OrderCreateView
 
 # Setting up the router
 router = DefaultRouter()
@@ -21,7 +23,10 @@ urlpatterns = [
     path('vendor-register/', RegisterView.as_view(), name='vendor_register'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/orders/', OrderCreateView.as_view(), name='order-create'),
 ]
+
+
 
 
 if settings.DEBUG:

@@ -1,5 +1,3 @@
-// src/app/api/checkout/route.js
-
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { sendOrderEmail } from '../../../utils/sendOrderEmail';
@@ -25,9 +23,6 @@ export async function POST(request) {
         const cookieHeader = await cookies();
         const cartCookie = cookieHeader.get('cart');
 
-        // Debugging: Log cartCookie to inspect its contents
-        console.log("cartCookie value:", cartCookie);
-
         // Parse the cart data from cartCookie.value
         let cart = [];
         if (cartCookie && cartCookie.value) {
@@ -43,6 +38,67 @@ export async function POST(request) {
         if (!Array.isArray(cart)) {
             console.error('Cart data is not an array:', cart);
             return NextResponse.json({ error: 'Cart data is invalid' }, { status: 500 });
+        }
+
+        // Safely split name into first and last names, with fallback for last name
+        const [firstName, lastName = 'Not Provided'] = name.split(' ');
+
+        // Prepare order data for the Django backend
+        const orderData = {
+            customer: {
+                first_name: firstName,
+                last_name: lastName,
+                email,
+                address,
+                city,
+                postal_code: postalCode,
+                country,
+            },
+            order_date: new Date().toISOString(),
+            status: 'pending',
+            total_price: cart.reduce((acc, item) => acc + (parseFloat(item.price) * item.quantity), 0),
+            order_lines: cart.map(item => ({
+                product: item.id,
+                quantity: item.quantity,
+                unit_price: parseFloat(item.price),
+            })),
+        };
+
+        // Log the order data being sent to Django
+        console.log("Order Data being sent to Django:", orderData);
+
+        // Send order data to Django API
+        try {
+            const djangoResponse = await fetch('http://kuyadoga.com:8002/api/orders/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData),
+            });
+
+            // Log the raw response before attempting to parse it
+            const rawResponse = await djangoResponse.text();
+            console.log("Raw response from Django:", rawResponse);
+
+            // Attempt to parse JSON if response is expected to be JSON
+            let djangoResponseData;
+            try {
+                djangoResponseData = JSON.parse(rawResponse);
+            } catch (jsonError) {
+                console.error("Failed to parse JSON response from Django. Response may not be in JSON format.");
+                djangoResponseData = rawResponse; // Fall back to raw response for debugging
+            }
+
+            console.log("Parsed response from Django:", djangoResponseData);
+
+            if (!djangoResponse.ok) {
+                console.error('Failed to save order in Django:', djangoResponseData);
+                return NextResponse.json({ error: 'Failed to save order in backend' }, { status: 500 });
+            }
+        } catch (error) {
+            console.error("Error sending order to Django API:", error);
+            return NextResponse.json({ error: 'Failed to communicate with backend' }, { status: 500 });
         }
 
         // Format cart items for email content
@@ -67,13 +123,22 @@ export async function POST(request) {
                 email, // Customer email for inclusion in the email content
                 cartDetails // Cart details for email content
             );
+            console.log("Order confirmation email sent successfully.");
         } catch (error) {
             console.error("Failed to send order confirmation email:", error);
             return NextResponse.json({ error: 'Failed to send confirmation email' }, { status: 500 });
         }
 
         // Redirect to the order summary page
-        const redirectUrl = new URL('/order-summary', process.env.NEXT_PUBLIC_BASE_URL || 'http://kuyadoga.com:3000');
+        console.log("Environment Mode:", process.env.NODE_ENV);
+        console.log("NEXT_PUBLIC_BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
+
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://kuyadoga.com:3000';
+        console.log("Resolved Base URL:", baseUrl);
+
+        const redirectUrl = new URL('/order-summary', baseUrl);
+        // const redirectUrl = new URL('/order-summary', process.env.NEXT_PUBLIC_BASE_URL || 'http://kuyadoga.com:3000');
+                
         const response = NextResponse.redirect(redirectUrl);
 
         // Clear the cart cookie

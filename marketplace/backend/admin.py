@@ -50,6 +50,43 @@ class ProductManufacturerAdmin(admin.ModelAdmin):
     list_filter = ('created_at',)
     
     inlines = [ManufacturerImageInline]
+    
+    
+from .models import Product, ProductManufacturer, ThirdPartyVendor, ProductImage, ManufacturerImage
+from .models import Customer, Order, OrderLine  # Import the new models
+
+
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'email', 'phone', 'city', 'country', 'created_at')
+    search_fields = ('first_name', 'last_name', 'email', 'phone')
+    list_filter = ('country', 'created_at')
+
+class OrderLineInline(admin.TabularInline):
+    model = OrderLine
+    extra = 1
+    readonly_fields = ('total_price',)
+
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'customer', 'order_date', 'status', 'total_price')
+    list_filter = ('status', 'order_date')
+    search_fields = ('customer__first_name', 'customer__last_name', 'customer__email')
+    readonly_fields = ('total_price', 'created_at', 'updated_at')
+    inlines = [OrderLineInline]  # Add inline order lines for each order
+
+    # Optional: Automatically calculate total price when saving
+    def save_model(self, request, obj, form, change):
+        obj.calculate_total_price()  # Call custom method to calculate total
+        super().save_model(request, obj, form, change)
+
+class OrderLineAdmin(admin.ModelAdmin):
+    list_display = ('order', 'product', 'quantity', 'unit_price', 'total_price')
+    search_fields = ('order__id', 'product__name')
+    readonly_fields = ('total_price',)
+
+# Register models with the admin site
+admin.site.register(Customer, CustomerAdmin)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderLine, OrderLineAdmin)
 
 admin.site.register(ProductManufacturer, ProductManufacturerAdmin)
 admin.site.register(ThirdPartyVendor, ThirdPartyVendorAdmin)
