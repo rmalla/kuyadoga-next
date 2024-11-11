@@ -31,14 +31,14 @@ export async function generateProductMetadata({ params }) {
         openGraph: {
             title: `${product.name} - ${product.manufacturer} | Kuyadoga`,
             description: `Buy ${product.manufacturer} part number ${product.part_number} from Kuyadoga. Discover high-quality products from trusted manufacturers.`,
-            images: [product.image ? product.image : '/kuyadoga-logo-square.jpg'],
+            // images: [product.image ? product.imagse : '/kuyadoga-logo-square.jpg'],
             url: canonicalUrl,
         },
         twitter: {
             card: 'summary_large_image',
             title: `${product.name} - ${product.manufacturer} | Kuyadoga`,
             description: `Buy ${product.manufacturer} part number ${product.part_number} from Kuyadoga. Discover high-quality products from trusted manufacturers.`,
-            image: product.image ? product.image : '/kuyadoga-logo-square.jpg',
+            // image: product.image ? product.image : '/kuyadoga-logo-square.jpg',
         },
         alternates: {
             canonical: canonicalUrl,
@@ -46,14 +46,21 @@ export async function generateProductMetadata({ params }) {
     };
 }
 
-
 export function generateGeneralMetadata({ title, description, keywords, url, image }) {
     // Default values for general metadata
     const defaultTitle = 'Kuyadoga - High-Quality Products';
     const defaultDescription = 'Discover a wide range of high-quality products from trusted manufacturers.';
     const defaultKeywords = 'high-quality products, trusted manufacturers, Kuyadoga, buy online';
-    const defaultImage = '/kuyadoga-logo-square.jpg';
+    const defaultImage = 'https://www.kuyadoga.com/kuyadoga-logo-square.jpg';
     const defaultUrl = 'https://www.kuyadoga.com';
+
+    // Helper function to ensure absolute URL for images
+    const getAbsoluteUrl = (img) => {
+        if (img.startsWith('/')) {
+            return `${defaultUrl}${img}`;
+        }
+        return img;
+    };
 
     return {
         title: title || defaultTitle,
@@ -62,19 +69,17 @@ export function generateGeneralMetadata({ title, description, keywords, url, ima
         openGraph: {
             title: title || defaultTitle,
             description: description || defaultDescription,
-            images: [image || defaultImage],
+            images: [getAbsoluteUrl(image || defaultImage)],
             url: url || defaultUrl,
         },
         twitter: {
             card: 'summary_large_image',
             title: title || defaultTitle,
             description: description || defaultDescription,
-            image: image || defaultImage,
+            image: getAbsoluteUrl(image || defaultImage),
         },
     };
 }
-
-
 
 
 export function generateManufacturerMetadata(manufacturer) {

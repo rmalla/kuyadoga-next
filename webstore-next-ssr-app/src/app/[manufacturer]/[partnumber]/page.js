@@ -8,7 +8,7 @@ import ProductGrid from '../../../components/ProductGrid';
 import AddToCartButton from '../../../components/AddToCartButton'; // Import the client component
 import { fetchProducts, getProduct } from '../../../lib/fetcher';
 import { generateProductMetadata } from '../../../lib/metadata';
-
+//
 export async function generateMetadata({ params }) {
     return await generateProductMetadata({ params });
 }
@@ -29,6 +29,17 @@ export default async function ProductPage({ params }) {
 
     return (
         <div style={styles.container}>
+
+                {/* Breadcrumb navigation */}
+                <nav style={styles.breadcrumb}>
+                    <Link href="/">Home</Link> &gt;{' '}
+                    <Link href={`/manufacturer/${encodeURIComponent(manufacturer)}`}>{product.manufacturer}</Link> &gt;{' '}
+                    <Link href={`/manufacturer/${encodeURIComponent(manufacturer)}/${encodeURIComponent(partnumber)}`}>
+                        {partnumber}
+                    </Link> &gt;{' '}
+                    <span>{product.name}</span>
+                </nav>
+
             <div style={styles.productSection}>
 
                 <div style={styles.imageContainer}>
@@ -38,13 +49,14 @@ export default async function ProductPage({ params }) {
 
                 <div style={styles.details}>
                     <h1 style={styles.productName}>{product.name}</h1>
-                    <p><strong>Manufacturer:</strong> <Link href={`/manufacturer/${encodeURIComponent(manufacturer)}`}>{product.manufacturer}</Link></p>
+                    <p><strong>Manufacturer:</strong> <Link href={`/manufacturer/${encodeURIComponent(manufacturer)}`}>{product.manufacturer}</Link>
+                    </p>
                     <p><strong>Part Number:</strong> {product.part_number}</p>
                     <p><strong>Description:</strong> {product.description || 'No description available'}</p>
-                    <p><strong>Price:</strong> ${product.price}</p>
+                    <p><strong>Price:</strong> {new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(product.price)}</p>
 
                     {/* Use the client-side AddToCartButton here */}
-                    <AddToCartButton product={product} />
+                    <AddToCartButton product={product}/>
 
                     <div style={styles.reassuranceContainer}>
                         <p style={styles.reassuranceText}>✔ Free Shipping on Orders Over $100</p>
@@ -54,7 +66,8 @@ export default async function ProductPage({ params }) {
                 </div>
             </div>
 
-            <ContactForm />
+            {/* Pass product to ContactForm */}
+            <ContactForm product={product} />
             <ProductGrid products={relatedProducts} title="Similar Products" />
         </div>
     );
@@ -65,6 +78,13 @@ const styles = {
         padding: '1rem',
         maxWidth: '1200px',
         margin: '0 auto',
+    },
+    breadcrumb: {
+        marginBottom: '1rem',
+        fontSize: '1.4rem',
+        color: '#555',
+        padding: '0.7rem',
+        paddingLeft: '1.3rem',
     },
     productSection: {
         display: 'flex',

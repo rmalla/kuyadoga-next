@@ -1,9 +1,13 @@
 // src/components/ContactForm.js
 
-export default function ContactForm() {
+export default function ContactForm({ product }) {
+    const defaultMessage = product
+        ? `Please send me more information on ${product.manufacturer} - ${product.part_number} - ${product.name} `
+        : '';
+
     return (
         <div style={styles.contactFormSection}>
-            <h2>Contact Us</h2>
+            <h2>Enquire about this Product</h2>
             <form style={styles.contactForm} method="POST" action="/api/contact">
                 <label htmlFor="name" style={styles.label}>Name</label>
                 <input type="text" id="name" name="name" required style={styles.input} />
@@ -12,7 +16,14 @@ export default function ContactForm() {
                 <input type="email" id="email" name="email" required style={styles.input} />
 
                 <label htmlFor="message" style={styles.label}>Message</label>
-                <textarea id="message" name="message" rows="4" required style={styles.textarea}></textarea>
+                <textarea
+                    id="message"
+                    name="message"
+                    rows="4"
+                    required
+                    style={styles.textarea}
+                    defaultValue={defaultMessage}
+                ></textarea>
 
                 <button type="submit" style={styles.submitButton}>Send Message</button>
             </form>
