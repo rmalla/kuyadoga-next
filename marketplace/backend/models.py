@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import UniqueConstraint
 
 class ProductManufacturer(models.Model):
     name = models.CharField(max_length=255)
@@ -56,6 +57,9 @@ class Product(models.Model):
 	class Meta:
 		permissions = [
 			("manage_all_products", "Can manage all products regardless of vendor"),
+		]
+		constraints = [
+			UniqueConstraint(fields=['manufacturer', 'part_number'], name='unique_manufacturer_part_number')
 		]
 
 

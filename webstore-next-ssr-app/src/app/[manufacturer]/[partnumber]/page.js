@@ -81,7 +81,7 @@ const styles = {
     },
     breadcrumb: {
         marginBottom: '1rem',
-        fontSize: '1.4rem',
+        fontSize: '1.2rem',
         color: '#555',
         padding: '0.7rem',
         paddingLeft: '1.3rem',

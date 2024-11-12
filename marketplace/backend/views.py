@@ -20,7 +20,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     pagination_class = CustomPagination
 
     def get_queryset(self):
-        queryset = Product.objects.filter(is_active=True)
+        queryset = Product.objects.filter(is_active=True, obsolete=False, price__gt=500, price__lt=35000)
 
         # Apply case-insensitive filtering for manufacturer and part number
         manufacturer = self.request.query_params.get('manufacturer')
@@ -67,6 +67,7 @@ class ThirdPartyVendorViewSet(viewsets.ModelViewSet):
 class ProductManufacturerViewSet(viewsets.ModelViewSet):
     queryset = ProductManufacturer.objects.all()
     serializer_class = ProductManufacturerSerializer
+
 
 
 
