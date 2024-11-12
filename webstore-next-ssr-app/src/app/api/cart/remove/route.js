@@ -1,5 +1,4 @@
 // src/app/api/cart/remove/route.js
-
 import { NextResponse } from 'next/server';
 import { getSessionCart } from '../../../../lib/cart';
 
@@ -7,7 +6,9 @@ export async function POST(request) {
     const formData = await request.formData();
     const productId = formData.get('deleteItem');
 
-    console.log('Product ID to remove:', productId);
+    console.log("Environment Base URL:", process.env.BASE_URL);
+
+    console.log('Product ID to remove1:', productId);
 
     // Retrieve the current cart
     let cart = await getSessionCart();
@@ -17,8 +18,16 @@ export async function POST(request) {
     cart = cart.filter(item => item.id !== Number(productId));
     console.log('Cart after deletion:', JSON.stringify(cart, null, 2));
 
-    // Redirect back to the cart page on your specified base URL
-    const response = NextResponse.redirect('http://kuyadoga.com:3000/cart');
+    // Check and log the baseUrl value from the environment variable
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3002';
+    console.log('Base URL used for redirection:', baseUrl); // Log the base URL
+
+    const redirectUrl = `${baseUrl}/cart`;
+    console.log('Full redirect URL:', redirectUrl); // Log the full redirect URL to check it
+
+    // Use the base URL for redirection
+    const response = NextResponse.redirect(redirectUrl);
+
     response.cookies.set('cart', JSON.stringify(cart), {
         path: '/',
         httpOnly: true,

@@ -1,10 +1,8 @@
 // src/components/AddToCartButton.js
+
 "use client";
-import { useRouter } from 'next/navigation';
 
-export default function AddToCartButton({ product }) {
-    const router = useRouter();
-
+export default function AddToCartButton({ product, updateCartCount }) {
     const handleAddToCart = async () => {
         await fetch('/api/cart/add', {
             method: 'POST',
@@ -13,9 +11,8 @@ export default function AddToCartButton({ product }) {
             },
             body: JSON.stringify({ product }),
         });
-
-        // Refresh the page to show updated cart count
-        router.refresh();
+        // Call the function to update the cart count
+        updateCartCount();
     };
 
     return (

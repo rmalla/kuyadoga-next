@@ -39,7 +39,7 @@ export async function POST(req) {
         }
 
         // Redirect back to the cart page after processing
-        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || req.nextUrl.origin;
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || req.nextUrl.origin;
         const redirectUrl = `${baseUrl}/cart`;
         console.log('Redirecting to:', redirectUrl);
 

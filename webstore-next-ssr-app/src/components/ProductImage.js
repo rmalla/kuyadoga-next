@@ -4,7 +4,8 @@ export default function ProductImage({ product, style }) {
     const imageUrl = product.images && product.images[0]?.image
         ? product.images[0].image
         : product.manufacturer_logo
-        ? `https://admin.kuyadoga.com${product.manufacturer_logo}`
+        // ? `https://admin.kuyadoga.com${product.manufacturer_logo}`
+        ? `${process.env.DJANGO_INTERNAL_API_URL}${product.manufacturer_logo}`
         : '/kuyadoga-logo-square.jpg';
 
     const altText = product.images && product.images[0]?.image
